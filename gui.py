@@ -4,12 +4,15 @@ import send
 
 
 # setup
+global uploadlabel
+
 tk = tkinter.Tk(className=" DotMatrix Display GUI Uploader")
 tk.geometry("400x200")
 label = Label(tk, text="MAC address of your device:")
 maclabel = Label(tk, text=send.address.upper(), font=("Calibri", 30))
 author = Label(tk, text="© Aki 2024")
 filelabel = Label(tk, text="Selected File: <not selected>")
+uploadlabel = Label(tk, text="empty", font=("Calibri", 20))
 
 # get path (for python 3.8+) to be able to compile as one file using PyInstaller
 def resource_path(relative_path):
@@ -35,9 +38,12 @@ def selectFileCallback():
 
 def uploadCallback():
     if file_path:
+        uploadlabel.config(text="Uploading, please wait!")
+        tk.update()  # Ensure the GUI updates the label text before proceeding
         filename = file_path
-        print("file_path: ", file_path)
-        os.system(f'python send.py {filename}')
+        print("now it should display the label")
+        os.system(f'python send.py {send.address} {filename}')
+        uploadlabel.config(text="Upload complete!")
         print("all done! :-)")
     
 def enterMacAddressCallback():
@@ -48,7 +54,7 @@ label.place(x=5, y=5)
 maclabel.place(x=41, y=25)
 author.place(x=335, y=180)
 filelabel.place(x=5, y=160)
-
+uploadlabel.place(x=5, y=5)
 
 # configure buttons
 button1 = tkinter.Button(tk, text="Select File", command=selectFileCallback)
