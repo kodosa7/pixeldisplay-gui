@@ -1,0 +1,7 @@
+*venv*
+__pychache__
+*.code-workspace
+*.gif
+*.webp
+*.bmp
+*.pyc
