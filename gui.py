@@ -4,15 +4,17 @@ import send
 
 
 # setup
-global uploadlabel
-
 tk = tkinter.Tk(className=" DotMatrix Display GUI Uploader")
 tk.geometry("400x256")
+
+# variables
+global uploadlabel
+
 label = Label(tk, text="MAC address of your device:")
-maclabel = Label(tk, text=send.address.upper(), font=("Calibri", 30))
+mac_label = Label(tk, text=send.address.upper(), font=("Calibri", 30))
 author = Label(tk, text="© R0ger, Aki 2024")
-filelabel = Label(tk, text="Selected File: <not selected>")
-uploadlabel = Label(tk, text="Status: idle")
+file_label = Label(tk, text="Selected File: <not selected>")
+upload_label = Label(tk, text="Status: idle")
 
 # get path (for python 3.8+) to be able to compile as one file using PyInstaller
 def resource_path(relative_path):
@@ -25,9 +27,9 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-
 # define callbacks
 def selectFileCallback():
+    """ Select File button handler """
     global file_path
     file_path = filedialog.askopenfilename(
         title="Select a file",
@@ -37,13 +39,15 @@ def selectFileCallback():
         filelabel.config(text=f"Selected File: {file_path}")
 
 def uploadCallback():
+    """ Upload button handler """
     if file_path:
-        uploadlabel.config(text="Status: Uploading, please wait!")
+        upload_label.config(text="Status: Uploading, please wait!")
         tk.update()  # Ensure the GUI updates the label text before proceeding
+
         filename = file_path
-        print("now it should display the label")
         os.system(f'python send.py {send.address} {filename}')
-        uploadlabel.config(text="Status: Upload complete")
+
+        upload_label.config(text="Status: Upload complete")
         print("all done! :-)")
     
 def enterMacAddressCallback():
@@ -51,10 +55,10 @@ def enterMacAddressCallback():
 
 # show text
 label.place(x=5, y=5)
-maclabel.place(x=41, y=25)
+mac_label.place(x=41, y=25)
 author.place(x=290, y=230)
-filelabel.place(x=5, y=160)
-uploadlabel.place(x=5, y=180)
+file_label.place(x=5, y=160)
+upload_label.place(x=5, y=180)
 
 # configure buttons
 button1 = tkinter.Button(tk, text="Select File", command=selectFileCallback)
@@ -65,8 +69,6 @@ button3 = tkinter.Button(tk, text="Enter MAC address", command=enterMacAddressCa
 button1.place(x=30, y=90, height=50, width=100)
 button2.place(x=150, y=90, height=50, width=100)
 button3.place(x=270, y=90, height=50, width=100)
-
-
 
 if __name__ == "__main__":
     tk.mainloop()
