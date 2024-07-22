@@ -14,7 +14,7 @@ address = "b4:fb:a8:bc:c5:70"
 filename = ""
 
 def Usage():
-	print("Commandline usage: send [mac aa:bb:cc:dd:ee:ff] [nofix] filename")
+	print("usage: send [mac aa:bb:cc:dd:ee:ff] [nofix] filename")
 	print("nofix = do not fix colours")
 
 async def main(address, filename):
