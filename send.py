@@ -8,8 +8,10 @@ from PIL import Image
 
 # R0ger
 # address = "2a:d8:16:d0:23:ca"
-# own
-address = "b4:fb:a8:bc:c5:70"
+# own 
+# address = "b4:fb:a8:bc:c5:70"
+# steve
+address = "34:49:39:B1:59:17"
 
 filename = ""
 
