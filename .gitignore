@@ -6,3 +6,6 @@ __pychache__
 *.bmp
 *.pyc
 TODO.md
+!brixel.gif
+!face.bmp
+!rgb24.bmp
