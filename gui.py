@@ -56,7 +56,7 @@ def enterMacAddressCallback():
 # show text
 label.place(x=5, y=5)
 mac_label.place(x=41, y=25)
-author.place(x=150, y=320)
+author.place(x=100, y=235)
 file_label.place(x=5, y=160)
 upload_label.place(x=5, y=180)
 
