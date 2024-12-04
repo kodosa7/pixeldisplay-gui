@@ -19,6 +19,7 @@ def Usage():
 	print("usage: send [mac aa:bb:cc:dd:ee:ff] [nofix] filename")
 	print("nofix = do not fix colours")
 
+
 async def main(address, filename):
 
 	argl = len(sys.argv);
@@ -27,9 +28,9 @@ async def main(address, filename):
 	
 	if argl > 1:
 		for i in range(1, argl):
-			cmd=sys.argv[i]
+			cmd = sys.argv[i]
 			
-			if 	cmd.lower() == "mac":
+			if cmd.lower() == "mac":
 				i = i + 1
 				if i < argl:
 					address = sys.argv[i]
@@ -44,7 +45,6 @@ async def main(address, filename):
 					
 	if address == "" or filename == "":
 		return Usage()
-
 
 	async with BleakClient(address) as client:
 
@@ -117,7 +117,7 @@ async def main(address, filename):
 
 				cmd_size = cmd_data + 16
 				
-				print ("Sending " + str(cmd_size) + " bytes at offset " + str(offset))
+				print("Sending " + str(cmd_size) + " bytes at offset " + str(offset))
 			
 				await client.write_gatt_char("0000fa02-0000-1000-8000-00805F9B34FB", cmd_size.to_bytes(2,"little") + header1 + data_len.to_bytes(4, "little") + crc + header2 + data[offset:offset + cmd_data])
 				
@@ -127,8 +127,8 @@ async def main(address, filename):
 				remaining = remaining - cmd_data
 				offset = offset + cmd_data
 				
-			print ("Done.")
+			print("Done.")
 			
 			
 if __name__ == "__main__":
-	asyncio.run(main(address,filename))
+	asyncio.run(main(address, filename))
