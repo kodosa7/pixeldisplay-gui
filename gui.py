@@ -4,30 +4,34 @@ import tkinter
 from tkinter import Label, filedialog, messagebox
 import asyncio
 import re
-import subprocess
+import logging
 
-import send
-from scan import BLEScanner
+logging.basicConfig(level=logging.INFO)
+
+# import send   # Original script by R0ger and Aki - Refactored into idm.pixeldisplay library
+from idm.pixeldisplay import BLEScanner, BLEImageUploader
 
 ble_scanner = BLEScanner()
 
 
 # setup
 tk = tkinter.Tk(className=" DotMatrix Display GUI Uploader")
-tk.geometry("600x400")
+tk.geometry("500x400")
 tk.resizable(False, False)
 
-# variables
-global uploadlabel
-
+# labels
 label = Label(tk, text="MAC address of your device:")
-mac_label = Label(tk, text="-", font=("Calibri", 30))
+mac_label = Label(tk, text="<None selected>", font=("Calibri", 30))
 author = Label(tk, text="Engine by R0ger, GUI by Aki © 2024\nScanner + GUI modifications by Noctis")
 file_label = Label(tk, text="Selected File: <not selected>")
 upload_label = Label(tk, text="Status: idle")
 lbl_select_device = Label(tk, text="Select Device")
 # listbox
 lst_devices = tkinter.Listbox(tk, width=100)
+
+# checkbox
+fix_colors = tkinter.IntVar(value=1)
+chk_fixcolors = tkinter.Checkbutton(tk, text="Fix colors", variable=fix_colors)
 
 
 # get path (for python 3.8+) to be able to compile as one file using PyInstaller
@@ -59,7 +63,7 @@ def uploadCallback():
     mac_addr = mac_label.cget("text")
 
     # Validate device selection
-    if mac_addr == "-":
+    if mac_addr == "<None selected>":
         tkinter.messagebox.showwarning("Warning", "Please select your device")
         return
 
@@ -77,13 +81,15 @@ def uploadCallback():
         filename = file_path.split(": ", 1)[1]
 
         # Execute the external script
-        subprocess.run(["python", "send.py", "mac", mac_addr, filename], check=True)
+        # subprocess.run(["python", "send.py", "mac", mac_addr, filename], check=True)
+        _uploader = BLEImageUploader(mac_addr, bool(fix_colors.get()))
+        asyncio.run(_uploader.send_image(filename))
 
         upload_label.config(text="Status: Upload complete")
-        print("All done! :-)")
-    except subprocess.CalledProcessError as e:
+        logging.info("All done! :-)")
+    except Exception as e:
         upload_label.config(text=f"Status: Upload failed {e}")
-        print(f"ERROR: {e}")
+        logging.error(f"ERROR: {e}")
         tkinter.messagebox.showerror("Error", "Upload failed. Please try again.")
 
 
@@ -119,10 +125,10 @@ def select_device_callback(event):
 
 # show text
 label.place(x=230, y=5)
-mac_label.place(x=140, y=25)
-author.place(x=160, y=235)
-file_label.place(x=125, y=160)
-upload_label.place(x=125, y=180)
+mac_label.place(x=152, y=25)
+author.place(x=160, y=335)
+file_label.place(x=128, y=180)
+upload_label.place(x=128, y=200)
 lbl_select_device.place(x=5, y=5)
 
 # configure buttons
@@ -131,10 +137,11 @@ btn_upload = tkinter.Button(tk, text="Upload to device", command=uploadCallback)
 btn_scan = tkinter.Button(tk, text="Scan for devices", command=scan_callback)
 
 # show buttons
-btn_sel_file.place(x=180, y=90, height=50, width=100)
-btn_upload.place(x=300, y=90, height=50, width=100)
+btn_sel_file.place(x=200, y=90, height=50, width=120)
+btn_upload.place(x=320, y=90, height=50, width=120)
 btn_scan.place(x=5, y=330, height=50, width=120)
 lst_devices.place(x=5, y=30, height=300, width=120)
+chk_fixcolors.place(x=125, y=160, height=20)
 
 # bind callback to listbox
 lst_devices.bind("<<ListboxSelect>>", select_device_callback)

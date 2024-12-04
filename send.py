@@ -1,3 +1,8 @@
+"""
+This is the original code by R0ger and Aki.
+Left here for reference.
+"""
+
 import asyncio
 from bleak import BleakClient
 import zlib
